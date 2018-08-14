@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btn">GGG</button>
+</body>
+<script src="js/jquery-2.1.0.js"></script>
+<script type="application/javascript">
+    function idfaValidate(str){
+        var newStr = str.replace(/-/g, "").replace(/\b(0+)/gi,"");
+        if(newStr.trim().length == 0){
+            return false;
+        }
+        return true;
+    }
+    $(function () {
+        $('#btn').click(function (e) {
+            $.ajax({
+                type: "GET",
+                timeout: 1000,
+                url: "http://127.0.0.1:20909/xyinfo",
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    if (result.result == 200) {
+                        alert(123)
+                        try {
+                            if(!idfaValidate(result.now_idfa)){
+                                $('#popupAdBlock').show();
+                                return false;
+                            }
+                        } catch (e) {
+
+                        }
+                        try {
+                            if (successCallback)
+                                successCallback();
+                        }
+                        catch (e) {}
+                    } else {
+                        alert(123,'warn');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                },
+                error: function (result, status) {
+
+                    alert("助手已掉线，将重新帮你打开助手",'warn',true);
+                    return false;
+                }
+            });
+        });
+    });
+</script>
+</html>
